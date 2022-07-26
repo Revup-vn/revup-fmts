@@ -1,0 +1,12 @@
+{
+  "name": "fmt",
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "firebase-admin": "~5.4.2",
+    "firebase-functions": "^0.7.1"
+  },
+  "devDependencies": {
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
