@@ -1,21 +1,21 @@
 "use strict";
 
 const admin = require("firebase-admin");
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v2");
 
 
-var serviceAccount = require("./sec.json");
+const serviceAccount = require("./sec.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
 });
 
-exports.checkIfPhoneExists = functions.https.onCall(async (data, context) => {
-    const phone = data.phone;
+exports.phoneexists = functions.https.onCall(async (data, _) => {
     try {
-        const _ = await admin.auth().getUserByPhoneNumber(phone);
-        return true;
-    } catch (__1) {
+        const phone = data.phone;
+        return (await admin.auth().getUserByPhoneNumber(phone)
+            .then((u) => u.phoneNumber != null).catch((_) => false));
+    } catch (_) {
         return false;
     }
 });

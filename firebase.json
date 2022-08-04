@@ -1,6 +1,7 @@
 {
   "functions": {
     "predeploy": [
+      // fish does not like this bash arg
       "npm --prefix \"$RESOURCE_DIR\" run lint"
     ]
   }
