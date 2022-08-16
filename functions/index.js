@@ -1,7 +1,7 @@
 "use strict";
 
 const admin = require("firebase-admin");
-const functions = require("firebase-functions/v2");
+const functions = require("firebase-functions");
 
 
 const serviceAccount = require("./sec.json");
@@ -9,6 +9,8 @@ const serviceAccount = require("./sec.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
+
+const fcm = admin.messaging();
 
 exports.phoneexists = functions.https.onCall(async (data, _) => {
     try {
@@ -19,3 +21,25 @@ exports.phoneexists = functions.https.onCall(async (data, _) => {
         return false;
     }
 });
+
+
+exports.sendtotoken = functions.https.onCall(async (data, _) => {
+    const payload = {
+        notification: {
+            title: data.title,
+            body: data.body,
+            icon: data.icon,
+        },
+        data: {
+            type: data.type,
+        },
+    };
+    try {
+        return (await fcm.sendToDevice(data.token, payload)
+            .then((res) => res.failureCount == 0 ? true : false)
+            .catch((_) => false));
+    } catch (_) {
+        return false;
+    }
+});
+
