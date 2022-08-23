@@ -30,9 +30,7 @@ exports.sendtotoken = functions.https.onCall(async (data, _) => {
             body: data.body,
             icon: data.icon,
         },
-        data: {
-            type: data.type,
-        },
+        data: data.payload,
     };
     try {
         return (await fcm.sendToDevice(data.token, payload)
