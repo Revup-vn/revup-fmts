@@ -41,3 +41,21 @@ exports.sendtotoken = functions.https.onCall(async (data, _) => {
     }
 });
 
+exports.multicast = functions.https.onCall(async (data, _) => {
+    const payload = {
+        notification: {
+            title: data.title,
+            body: data.body,
+            icon: data.icon,
+        },
+        data: data.payload,
+        tokens: data.tokens,
+    };
+    try {
+        return (await fcm.sendMulticast(payload)
+            .then((res) => res.successCount > 0 ? true : false)
+            .catch((_) => false));
+    } catch (_) {
+        return false;
+    }
+});
